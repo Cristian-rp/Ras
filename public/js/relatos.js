@@ -2,10 +2,27 @@ document.addEventListener('DOMContentLoaded', () => {
   async function cargarRelatos() {
     try {
       const res = await fetch('/api/relatos');
-      const relatos = await res.json();
       const contenedor = document.getElementById('contenedor-relatos');
 
       if (!contenedor) return;
+
+      if (!res.ok) {
+        console.error('Error del servidor:', res.status);
+        return;
+      }
+
+      const contentType = res.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+         console.error("Formato incorrecto: El servidor no devolvió JSON en /api/relatos.");
+         return;
+      }
+
+      const relatos = await res.json();
+
+      if (!Array.isArray(relatos) || relatos.length === 0) {
+        contenedor.innerHTML = `<p class="col-span-full text-center text-stone-500 py-8">Aún no hay relatos publicados.</p>`;
+        return;
+      }
 
       contenedor.innerHTML = relatos.map(r => `
         <div class="bg-white p-5 rounded-lg shadow border border-stone-200">
@@ -15,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       `).join('');
     } catch (err) {
-      console.error('Error al cargar relatos:', err);
+      console.error('Error de conexión al cargar relatos:', err);
     }
   }
 
@@ -24,14 +41,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnCerrar = document.getElementById('btn-cerrar-modal');
   const formRelato = document.getElementById('form-relato');
 
-  if (btnAbrir) {
+  if (btnAbrir && modal) {
     btnAbrir.addEventListener('click', () => {
       modal.classList.remove('hidden');
       modal.classList.add('flex');
     });
   }
 
-  if (btnCerrar) {
+  if (btnCerrar && modal) {
     btnCerrar.addEventListener('click', () => {
       modal.classList.add('hidden');
       modal.classList.remove('flex');
@@ -57,9 +74,11 @@ document.addEventListener('DOMContentLoaded', () => {
           modal.classList.add('hidden');
           modal.classList.remove('flex');
           cargarRelatos();
+        } else {
+          alert('No se pudo guardar el relato. Intenta nuevamente.');
         }
       } catch (err) {
-        console.error('Error al guardar relato:', err);
+        console.error('Error de conexión al guardar relato:', err);
       }
     });
   }

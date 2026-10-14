@@ -2,12 +2,24 @@ document.addEventListener('DOMContentLoaded', () => {
   async function cargarProductos() {
     try {
       const res = await fetch('/api/productos');
-      const productos = await res.json();
       const contenedor = document.getElementById('contenedor-productos');
 
       if (!contenedor) return;
 
-      if (productos.length === 0) {
+      if (!res.ok) {
+        console.error('Error del servidor:', res.status);
+        return; 
+      }
+
+      const contentType = res.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+         console.error("Formato incorrecto: El servidor no devolvió JSON en /api/productos.");
+         return;
+      }
+
+      const productos = await res.json();
+
+      if (!Array.isArray(productos) || productos.length === 0) {
         contenedor.innerHTML = `
           <div class="col-span-full text-center py-12 text-stone-500">
             <p class="text-lg font-bold">No hay publicaciones en el catálogo en este momento.</p>
@@ -53,19 +65,19 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   window.eliminarProducto = async (id) => {
-    const clave = prompt('Esta acción es solo para administradores. Ingresa la clave de administración:');
+    const clave = prompt('Para eliminar esta publicación, ingresa tu clave personal de autor o admin:');
     if (!clave) return;
 
     try {
       const res = await fetch(`/api/productos/${id}`, {
         method: 'DELETE',
         headers: {
-          'x-admin-key': clave
+          'x-owner-key': clave
         }
       });
 
       if (res.ok) {
-        alert('Publicación eliminada correctamente del catálogo.');
+        alert('Publicación eliminada correctamente.');
         cargarProductos();
       } else {
         const errorData = await res.json();

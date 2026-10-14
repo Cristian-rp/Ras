@@ -12,83 +12,124 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// --- CONEXIÓN A POSTGRESQL EN LA NUBE ---
-// La variable process.env.DATABASE_URL se configura en el panel de Render
+// CONEXIÓN A SUPABASE (Asegúrate de usar la URL con el puerto 6543 en Render)
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL || 'postgresql://postgres:contrasena@localhost:5432/ras_db',
-  ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
 
-// --- RUTAS DE NAVEGACIÓN ---
+pool.connect((err, client, release) => {
+  if (err) {
+    console.error('Error al conectar a la base de datos PostgreSQL:', err.stack);
+  } else {
+    console.log('¡Conexión exitosa a la base de datos de Supabase!');
+  }
+  if (release) release();
+});
+
+// RUTAS DE NAVEGACIÓN (VISTAS HTML)
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'views', 'index.html')));
 app.get('/mapa', (req, res) => res.sendFile(path.join(__dirname, 'views', 'mapa.html')));
 app.get('/relatos', (req, res) => res.sendFile(path.join(__dirname, 'views', 'relatos.html')));
 app.get('/catalogo', (req, res) => res.sendFile(path.join(__dirname, 'views', 'catalogo.html')));
 app.get('/emprendimiento', (req, res) => res.sendFile(path.join(__dirname, 'views', 'emprendimiento.html')));
 
-// --- API REST CONECTADA A BASE DE DATOS ---
+// API REST
 
-// Obtener todos los productos
+app.get('/api/puntos', async (req, res) => {
+  try {
+    const resultado = await pool.query('SELECT * FROM puntos_interes');
+    res.json(resultado.rows);
+  } catch (err) {
+    console.error('Error al obtener puntos:', err);
+    res.status(500).json({ error: 'Error al consultar la base de datos' });
+  }
+});
+
+app.get('/api/relatos', async (req, res) => {
+  try {
+    const resultado = await pool.query('SELECT * FROM relatos ORDER BY id DESC');
+    res.json(resultado.rows);
+  } catch (err) {
+    console.error('Error al obtener relatos:', err);
+    res.status(500).json({ error: 'Error al consultar la base de datos' });
+  }
+});
+
+app.post('/api/relatos', async (req, res) => {
+  const { titulo, autor, contenido } = req.body;
+  if (!titulo || !autor || !contenido) {
+    return res.status(400).json({ error: 'Todos los campos son obligatorios' });
+  }
+  try {
+    const query = 'INSERT INTO relatos (titulo, autor, contenido, tiempo) VALUES ($1, $2, $3, $4) RETURNING *';
+    const values = [titulo, autor, contenido, 'Hace un momento'];
+    const resultado = await pool.query(query, values);
+    res.status(201).json(resultado.rows[0]);
+  } catch (err) {
+    console.error('Error al guardar relato:', err);
+    res.status(500).json({ error: 'Error al guardar el relato' });
+  }
+});
+
 app.get('/api/productos', async (req, res) => {
   try {
     const resultado = await pool.query('SELECT * FROM productos ORDER BY id DESC');
     res.json(resultado.rows);
   } catch (err) {
-    console.error('Error al consultar productos:', err);
-    res.status(500).json({ error: 'Error interno al consultar productos' });
+    console.error('Error al obtener productos:', err);
+    res.status(500).json({ error: 'Error al consultar la base de datos' });
   }
 });
 
-// Crear un nuevo producto
 app.post('/api/productos', async (req, res) => {
-  const { usuario_id, titulo, artesano, categoria, precio, contacto } = req.body;
-  
-  // Asignamos un usuario por defecto (1) si aún no está implementado el login en el cliente
-  const idAutor = usuario_id || 1;
-
-  if (!titulo || !artesano || !categoria || !precio || !contacto) {
-    return res.status(400).json({ error: 'Todos los campos obligatorios deben ser diligenciados' });
+  const { titulo, artesano, categoria, precio, contacto, claveBorrado } = req.body;
+  if (!titulo || !artesano || !categoria || !precio || !contacto || !claveBorrado) {
+    return res.status(400).json({ error: 'Todos los campos son obligatorios' });
   }
-
   try {
-    const query = `
-      INSERT INTO productos (usuario_id, titulo, artesano, categoria, precio, contacto)
-      VALUES ($1, $2, $3, $4, $5, $6)
-      RETURNING *;
-    `;
-    const valores = [idAutor, titulo, artesano, categoria, precio, contacto];
-    const nuevoProducto = await pool.query(query, valores);
-
-    res.status(201).json(nuevoProducto.rows[0]);
+    const query = 'INSERT INTO productos (titulo, artesano, categoria, precio, contacto, clave_borrado) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
+    const values = [titulo, artesano, categoria, precio, contacto, String(claveBorrado).trim()];
+    const resultado = await pool.query(query, values);
+    res.status(201).json(resultado.rows[0]);
   } catch (err) {
     console.error('Error al guardar producto:', err);
-    res.status(500).json({ error: 'Error al registrar el producto en la base de datos' });
+    res.status(500).json({ error: 'Error interno' });
   }
 });
 
-// Eliminar un producto (Validando propiedad del usuario)
 app.delete('/api/productos/:id', async (req, res) => {
+  const userKey = req.headers['x-owner-key'];
   const { id } = req.params;
-  const usuarioId = req.headers['x-user-id'] || 1; // ID del usuario que solicita la eliminación
+  const CLAVE_ADMIN = "admin123";
 
   try {
-    const borrado = await pool.query(
-      'DELETE FROM productos WHERE id = $1 AND usuario_id = $2 RETURNING *',
-      [id, usuarioId]
-    );
-
-    if (borrado.rowCount === 0) {
-      return res.status(403).json({ error: 'No tienes permisos para eliminar este producto o no existe' });
+    const productoRes = await pool.query('SELECT * FROM productos WHERE id = $1', [id]);
+    if (productoRes.rows.length === 0) {
+      return res.status(404).json({ error: 'Producto no encontrado' });
     }
 
-    res.json({ mensaje: 'Producto eliminado con éxito', producto: borrado.rows[0] });
+    const producto = productoRes.rows[0];
+
+    if (userKey !== producto.clave_borrado && userKey !== CLAVE_ADMIN) {
+      return res.status(401).json({ error: 'No autorizado para eliminar' });
+    }
+
+    await pool.query('DELETE FROM productos WHERE id = $1', [id]);
+    res.json({ mensaje: 'Eliminado correctamente' });
   } catch (err) {
-    console.error('Error al eliminar producto:', err);
-    res.status(500).json({ error: 'Error interno al eliminar el producto' });
+    console.error('Error al eliminar:', err);
+    res.status(500).json({ error: 'Error interno' });
   }
 });
 
-// Iniciar Servidor
+// INTERCEPTOR DE ERRORES API (Evita que el servidor devuelva HTML en rutas no encontradas)
+app.use('/api/*', (req, res) => {
+  res.status(404).json({ error: 'Ruta API no encontrada' });
+});
+
 app.listen(PORT, () => {
-  console.log(`Servidor de RAS escuchando en el puerto ${PORT}`);
+  console.log(`Servidor de RAS corriendo en el puerto ${PORT}`);
 });
