@@ -10,7 +10,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Datos iniciales en memoria (API REST)
+// --- VISTAS / PANTALLAS SEPARADAS ---
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'views', 'index.html')));
+app.get('/mapa', (req, res) => res.sendFile(path.join(__dirname, 'views', 'mapa.html')));
+app.get('/relatos', (req, res) => res.sendFile(path.join(__dirname, 'views', 'relatos.html')));
+app.get('/catalogo', (req, res) => res.sendFile(path.join(__dirname, 'views', 'catalogo.html')));
+
+// --- API ENDPOINTS ---
 const puntosInteres = [
   { id: 1, nombre: "Sua Cha - Zona Arqueológica", categoria: "Patrimonio Cultural", coords: [4.5794, -74.2168], descripcion: "Espacio de alto valor histórico para la memoria ancestral Muysca y arte rupestre." },
   { id: 2, nombre: "Humedal Neuta", categoria: "Reserva Ambiental", coords: [4.5880, -74.2250], descripcion: "Ecosistema estratégico de biodiversidad y espacio sagrado de conexión ambiental." },
@@ -27,7 +33,6 @@ const productos = [
   { id: 2, titulo: "Tejido en Lana de Oveja", artesano: "Tejedoras Muyscas", categoria: "Textil", precio: "50.000 COP", contacto: "573000000000" }
 ];
 
-// Rutas de la API
 app.get('/api/puntos', (req, res) => res.json(puntosInteres));
 app.get('/api/relatos', (req, res) => res.json(relatos));
 app.post('/api/relatos', (req, res) => {
@@ -39,9 +44,4 @@ app.post('/api/relatos', (req, res) => {
 });
 app.get('/api/productos', (req, res) => res.json(productos));
 
-// Vista Principal
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'index.html'));
-});
-
-app.listen(PORT, () => console.log(`Servidor de RAS corriendo en http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`Servidor escuchando en http://localhost:${PORT}`));

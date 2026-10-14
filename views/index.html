@@ -4,67 +4,96 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Red Ancestral de Soacha - RAS</title>
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <!-- Estilos propios -->
   <link rel="stylesheet" href="/css/styles.css">
 </head>
-<body class="bg-stone-50 text-stone-800 font-sans">
+<body class="bg-stone-50 text-stone-800 font-sans flex flex-col min-h-screen">
+
+  <!-- Header / Menú de Navegación -->
   <header class="bg-emerald-900 text-white shadow-lg sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
       <div class="flex items-center space-x-3">
-        <div class="bg-emerald-600 font-bold px-3 py-1 rounded text-xl">RAS</div>
+        <a href="/" class="bg-emerald-600 font-bold px-3 py-1 rounded text-xl hover:bg-emerald-500 transition">RAS</a>
         <h1 class="text-lg font-semibold tracking-wide hidden md:block">Red Ancestral de Soacha</h1>
       </div>
       <nav class="space-x-4 text-sm font-medium">
-        <a href="#mapa" class="hover:text-emerald-300 transition">Mapa</a>
-        <a href="#participacion" class="hover:text-emerald-300 transition">Memoria</a>
-        <a href="#catalogo" class="hover:text-emerald-300 transition">Catálogo</a>
+        <a href="/" class="text-emerald-300 font-bold border-b-2 border-emerald-300 pb-1">Inicio</a>
+        <a href="/mapa" class="hover:text-emerald-300 transition">Mapa</a>
+        <a href="/relatos" class="hover:text-emerald-300 transition">Memoria</a>
+        <a href="/catalogo" class="hover:text-emerald-300 transition">Catálogo</a>
       </nav>
     </div>
   </header>
 
-  <section class="bg-emerald-800 text-white py-12 px-4 text-center">
-    <h2 class="text-3xl md:text-5xl font-bold mb-4">Preservando el patrimonio e identidad de Soacha</h2>
-    <p class="max-w-2xl mx-auto text-emerald-100 mb-6">Mapeo interactivo, memoria colectiva y comercio justo para nuestros sabedores y artesanos locales.</p>
-    <a href="#mapa" class="bg-amber-500 hover:bg-amber-600 text-stone-900 font-bold px-6 py-3 rounded-lg shadow transition inline-block">Explorar Mapa Territorial</a>
-  </section>
-
-  <section id="mapa" class="max-w-7xl mx-auto py-10 px-4">
-    <h3 class="text-2xl font-bold text-emerald-900 mb-4 border-b-2 border-emerald-600 pb-2">1. Mapeo Cultural y Ambiental</h3>
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <div id="map" class="lg:col-span-2 h-96 rounded-lg shadow-md border border-stone-200 z-10"></div>
-      <div class="bg-white p-6 rounded-lg shadow-md border border-stone-200">
-        <h4 class="font-bold text-lg mb-2 text-stone-800">Detalles del Sitio</h4>
-        <p class="text-sm text-stone-600 mb-4">Haz clic en cualquier marcador en el mapa para explorar los detalles.</p>
-        <div id="punto-detalle" class="p-4 bg-emerald-50 rounded border border-emerald-200">
-          <span id="sitio-categoria" class="text-xs bg-emerald-700 text-white font-bold px-2 py-0.5 rounded">Patrimonio Cultural</span>
-          <h5 id="sitio-nombre" class="font-bold mt-2 text-lg">Sua Cha - Zona Arqueológica</h5>
-          <p id="sitio-descripcion" class="text-xs text-stone-600 mt-2">Espacio de alto valor histórico para la memoria ancestral Muysca.</p>
+  <!-- Hero Section -->
+  <main class="flex-grow">
+    <section class="bg-emerald-800 text-white py-16 px-4 text-center">
+      <div class="max-w-4xl mx-auto">
+        <h2 class="text-3xl md:text-5xl font-bold mb-4">Preservando el patrimonio e identidad de Soacha</h2>
+        <p class="max-w-2xl mx-auto text-emerald-100 text-lg mb-8">
+          Mapeo interactivo, memoria colectiva y comercio justo para nuestros sabedores, artesanos y gestores culturales locales.
+        </p>
+        <div class="flex flex-wrap justify-center gap-4">
+          <a href="/mapa" class="bg-amber-500 hover:bg-amber-600 text-stone-900 font-bold px-6 py-3 rounded-lg shadow transition">
+            Explorar Mapa Territorial
+          </a>
+          <a href="/relatos" class="bg-emerald-700 hover:bg-emerald-600 text-white font-bold px-6 py-3 rounded-lg shadow transition">
+            Leer Relatos Comunitarios
+          </a>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section id="participacion" class="bg-stone-100 py-10 px-4">
-    <div class="max-w-7xl mx-auto">
-      <div class="flex justify-between items-center mb-6 border-b-2 border-emerald-600 pb-2">
-        <h3 class="text-2xl font-bold text-emerald-900">2. Memoria Viva y Relatos</h3>
-        <button id="btn-abrir-modal" class="bg-emerald-700 hover:bg-emerald-800 text-white text-sm px-4 py-2 rounded shadow transition">+ Compartir un Relato</button>
-      </div>
-      <div id="contenedor-relatos" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
-    </div>
-  </section>
-
-  <div id="modal-relato" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
-    <div class="bg-white rounded-lg p-6 max-w-lg w-full shadow-xl">
-      <h4 class="text-xl font-bold text-emerald-900 mb-4">Compartir un Relato o Historia</h4>
-      <form id="form-relato">
-        <div class="mb-3">
-          <label class="block text-xs font-bold mb-1">Título del Relato</label>
-          <input type="text" id="relato-titulo" required class="w-full border rounded p-2 text-sm">
+    <!-- Sección Módulos Principales -->
+    <section class="max-w-7xl mx-auto py-12 px-4">
+      <h3 class="text-2xl font-bold text-emerald-900 mb-8 border-b-2 border-emerald-600 pb-2 text-center">
+        Módulos de la Plataforma
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        <!-- Tarjeta Módulo 1 -->
+        <div class="bg-white p-6 rounded-lg shadow-md border border-stone-200 flex flex-col justify-between">
+          <div>
+            <div class="w-12 h-12 bg-emerald-100 text-emerald-800 font-bold flex items-center justify-center rounded-lg text-xl mb-4">1</div>
+            <h4 class="text-xl font-bold text-stone-800 mb-2">Mapeo Cultural y Ambiental</h4>
+            <p class="text-stone-600 text-sm mb-4">Geolocaliza e identifica sitios de interés histórico, ambiental y arqueológico en Soacha.</p>
+          </div>
+          <a href="/mapa" class="text-emerald-700 font-bold text-sm hover:underline">Ir al Mapa &rarr;</a>
         </div>
-        <div class="mb-3">
+
+        <!-- Tarjeta Módulo 2 -->
+        <div class="bg-white p-6 rounded-lg shadow-md border border-stone-200 flex flex-col justify-between">
+          <div>
+            <div class="w-12 h-12 bg-emerald-100 text-emerald-800 font-bold flex items-center justify-center rounded-lg text-xl mb-4">2</div>
+            <h4 class="text-xl font-bold text-stone-800 mb-2">Memoria Viva y Relatos</h4>
+            <p class="text-stone-600 text-sm mb-4">Espacio participativo donde la comunidad comparte historias, tradiciones y saberes locales.</p>
+          </div>
+          <a href="/relatos" class="text-emerald-700 font-bold text-sm hover:underline">Ver Relatos &rarr;</a>
+        </div>
+
+        <!-- Tarjeta Módulo 3 -->
+        <div class="bg-white p-6 rounded-lg shadow-md border border-stone-200 flex flex-col justify-between">
+          <div>
+            <div class="w-12 h-12 bg-emerald-100 text-emerald-800 font-bold flex items-center justify-center rounded-lg text-xl mb-4">3</div>
+            <h4 class="text-xl font-bold text-stone-800 mb-2">Catálogo Cultural y Artesanal</h4>
+            <p class="text-stone-600 text-sm mb-4">Plataforma de contacto directo con artesanos y emprendedores locales sin intermediarios.</p>
+          </div>
+          <a href="/catalogo" class="text-emerald-700 font-bold text-sm hover:underline">Explorar Catálogo &rarr;</a>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-stone-800 text-stone-300 py-6 text-center text-xs">
+    <p>&copy; Red Ancestral de Soacha (RAS). Universidad de Cundinamarca.</p>
+  </footer>
+
+</body>
+</html>        <div class="mb-3">
           <label class="block text-xs font-bold mb-1">Publicado por (Nombre o Colectivo)</label>
           <input type="text" id="relato-autor" required class="w-full border rounded p-2 text-sm">
         </div>
