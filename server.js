@@ -23,12 +23,12 @@ const relatos = [
   { id: 2, titulo: "Tradición Tejendera en Soacha", autor: "Comunidad Muysca", tiempo: "Hace 5 días", contenido: "Nuestra abuela nos enseñó el tejido como una forma de plasmar el pensamiento y la memoria del territorio." }
 ];
 
-const productos = [
+let productos = [
   { id: 1, titulo: "Vasija de Cerámica Ancestral", artesano: "Artesanos de Soacha", categoria: "Artesanía", precio: "35.000 COP", contacto: "573000000000" },
   { id: 2, titulo: "Tejido en Lana de Oveja", artesano: "Tejedoras Muyscas", categoria: "Textil", precio: "50.000 COP", contacto: "573000000000" }
 ];
 
-// --- RUTAS DE NAVEGACIÓN (VISTAS HTML) ---
+// --- RUTAS DE NAVEGACIÓN POR PANTALLA ---
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'views', 'index.html')));
 app.get('/mapa', (req, res) => res.sendFile(path.join(__dirname, 'views', 'mapa.html')));
 app.get('/relatos', (req, res) => res.sendFile(path.join(__dirname, 'views', 'relatos.html')));
@@ -60,13 +60,14 @@ app.post('/api/relatos', (req, res) => {
 
 // Módulo 3: Catálogo Comercial
 app.get('/api/productos', (req, res) => res.json(productos));
+
 app.post('/api/productos', (req, res) => {
   const { titulo, artesano, categoria, precio, contacto } = req.body;
   if (!titulo || !artesano || !categoria || !precio || !contacto) {
     return res.status(400).json({ error: 'Todos los campos obligatorios deben ser diligenciados' });
   }
   const nuevoProducto = {
-    id: productos.length + 1,
+    id: Date.now(),
     titulo,
     artesano,
     categoria,
@@ -75,6 +76,27 @@ app.post('/api/productos', (req, res) => {
   };
   productos.unshift(nuevoProducto);
   res.status(201).json(nuevoProducto);
+});
+
+// ENDPOINT PROTEGIDO: ELIMINAR UN PRODUCTO DEL CATÁLOGO
+app.delete('/api/productos/:id', (req, res) => {
+  const adminKey = req.headers['x-admin-key'];
+  const CLAVE_SECRETA = "admin123"; // Clave requerida para autorizar la eliminación
+
+  if (adminKey !== CLAVE_SECRETA) {
+    return res.status(401).json({ error: 'Acceso no autorizado. Clave de administrador incorrecta.' });
+  }
+
+  const { id } = req.params;
+  const idNumerico = parseInt(id, 10);
+
+  const existe = productos.some(p => p.id === idNumerico);
+  if (!existe) {
+    return res.status(404).json({ error: 'El producto a eliminar no existe.' });
+  }
+
+  productos = productos.filter(p => p.id !== idNumerico);
+  res.json({ mensaje: 'Producto eliminado correctamente', id: idNumerico });
 });
 
 // Iniciar servidor
