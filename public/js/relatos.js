@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // Cargar lista de relatos desde la API
   async function cargarRelatos() {
     try {
       const res = await fetch('/api/relatos');
@@ -20,7 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Control del Modal y Formulario de publicación
   const modal = document.getElementById('modal-relato');
   const btnAbrir = document.getElementById('btn-abrir-modal');
   const btnCerrar = document.getElementById('btn-cerrar-modal');

@@ -5,18 +5,13 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Middlewares
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// --- VISTAS / PANTALLAS SEPARADAS ---
-app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'views', 'index.html')));
-app.get('/mapa', (req, res) => res.sendFile(path.join(__dirname, 'views', 'mapa.html')));
-app.get('/relatos', (req, res) => res.sendFile(path.join(__dirname, 'views', 'relatos.html')));
-app.get('/catalogo', (req, res) => res.sendFile(path.join(__dirname, 'views', 'catalogo.html')));
-
-// --- API ENDPOINTS ---
+// --- BASE DE DATOS EN MEMORIA ---
 const puntosInteres = [
   { id: 1, nombre: "Sua Cha - Zona Arqueológica", categoria: "Patrimonio Cultural", coords: [4.5794, -74.2168], descripcion: "Espacio de alto valor histórico para la memoria ancestral Muysca y arte rupestre." },
   { id: 2, nombre: "Humedal Neuta", categoria: "Reserva Ambiental", coords: [4.5880, -74.2250], descripcion: "Ecosistema estratégico de biodiversidad y espacio sagrado de conexión ambiental." },
@@ -33,15 +28,56 @@ const productos = [
   { id: 2, titulo: "Tejido en Lana de Oveja", artesano: "Tejedoras Muyscas", categoria: "Textil", precio: "50.000 COP", contacto: "573000000000" }
 ];
 
+// --- RUTAS DE NAVEGACIÓN (VISTAS HTML) ---
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'views', 'index.html')));
+app.get('/mapa', (req, res) => res.sendFile(path.join(__dirname, 'views', 'mapa.html')));
+app.get('/relatos', (req, res) => res.sendFile(path.join(__dirname, 'views', 'relatos.html')));
+app.get('/catalogo', (req, res) => res.sendFile(path.join(__dirname, 'views', 'catalogo.html')));
+app.get('/emprendimiento', (req, res) => res.sendFile(path.join(__dirname, 'views', 'emprendimiento.html')));
+
+// --- RUTAS DE LA API REST ---
+
+// Módulo 1: Puntos del mapa
 app.get('/api/puntos', (req, res) => res.json(puntosInteres));
+
+// Módulo 2: Relatos comunitarios
 app.get('/api/relatos', (req, res) => res.json(relatos));
 app.post('/api/relatos', (req, res) => {
   const { titulo, autor, contenido } = req.body;
-  if (!titulo || !autor || !contenido) return res.status(400).json({ error: 'Campos incompletos' });
-  const nuevoRelato = { id: relatos.length + 1, titulo, autor, tiempo: "Hace un momento", contenido };
+  if (!titulo || !autor || !contenido) {
+    return res.status(400).json({ error: 'Todos los campos son obligatorios' });
+  }
+  const nuevoRelato = {
+    id: relatos.length + 1,
+    titulo,
+    autor,
+    tiempo: "Hace un momento",
+    contenido
+  };
   relatos.unshift(nuevoRelato);
   res.status(201).json(nuevoRelato);
 });
-app.get('/api/productos', (req, res) => res.json(productos));
 
-app.listen(PORT, () => console.log(`Servidor escuchando en http://localhost:${PORT}`));
+// Módulo 3: Catálogo Comercial
+app.get('/api/productos', (req, res) => res.json(productos));
+app.post('/api/productos', (req, res) => {
+  const { titulo, artesano, categoria, precio, contacto } = req.body;
+  if (!titulo || !artesano || !categoria || !precio || !contacto) {
+    return res.status(400).json({ error: 'Todos los campos obligatorios deben ser diligenciados' });
+  }
+  const nuevoProducto = {
+    id: productos.length + 1,
+    titulo,
+    artesano,
+    categoria,
+    precio,
+    contacto
+  };
+  productos.unshift(nuevoProducto);
+  res.status(201).json(nuevoProducto);
+});
+
+// Iniciar servidor
+app.listen(PORT, () => {
+  console.log(`Servidor de RAS escuchando en http://localhost:${PORT}`);
+});

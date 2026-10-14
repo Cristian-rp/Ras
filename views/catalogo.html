@@ -4,14 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Catálogo Cultural - RAS</title>
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Estilos propios -->
   <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body class="bg-stone-50 text-stone-800 font-sans flex flex-col min-h-screen">
 
-  <!-- Header -->
   <header class="bg-emerald-900 text-white shadow-lg sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
       <div class="flex items-center space-x-3">
@@ -23,24 +20,26 @@
         <a href="/mapa" class="hover:text-emerald-300 transition">Mapa</a>
         <a href="/relatos" class="hover:text-emerald-300 transition">Memoria</a>
         <a href="/catalogo" class="text-emerald-300 font-bold border-b-2 border-emerald-300 pb-1">Catálogo</a>
+        <a href="/emprendimiento" class="bg-amber-500 hover:bg-amber-600 text-stone-900 font-bold px-3 py-1 rounded transition">+ Zona Emprendedor</a>
       </nav>
     </div>
   </header>
 
-  <!-- Contenido Principal -->
   <main class="max-w-7xl mx-auto py-10 px-4 flex-grow w-full">
-    <h2 class="text-2xl font-bold text-emerald-900 mb-6 border-b-2 border-emerald-600 pb-2">3. Catálogo Cultural y Artesanal</h2>
+    <div class="flex justify-between items-center mb-6 border-b-2 border-emerald-600 pb-2">
+      <h2 class="text-2xl font-bold text-emerald-900">3. Catálogo Cultural y Artesanal</h2>
+      <a href="/emprendimiento" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs md:text-sm px-4 py-2 rounded shadow transition">
+        ¿Eres artesano? Publica tu producto
+      </a>
+    </div>
     
-    <!-- Contenedor Dinámico de Productos -->
     <div id="contenedor-productos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
   </main>
 
-  <!-- Footer -->
   <footer class="bg-stone-800 text-stone-300 py-4 text-center text-xs">
     <p>&copy; Red Ancestral de Soacha (RAS).</p>
   </footer>
 
-  <!-- Script específico para esta pantalla -->
   <script src="/js/catalogo.js"></script>
 </body>
 </html>

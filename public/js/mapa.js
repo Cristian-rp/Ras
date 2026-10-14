@@ -1,14 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // Inicializar mapa centrado en Soacha, Cundinamarca
   const map = L.map('map').setView([4.5794, -74.2168], 13);
 
-  // Capa Esri Maps libre de bloqueos de origen
   L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
     attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China, TomTom',
     maxZoom: 19
   }).addTo(map);
 
-  // Obtener puntos geolocalizados desde el backend Node.js
   async function cargarPuntosMapa() {
     try {
       const res = await fetch('/api/puntos');
