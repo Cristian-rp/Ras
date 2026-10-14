@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const map = L.map('map').setView([4.5794, -74.2168], 13);
+  // 1. Inicializar el mapa con una vista más amplia para ver todos los puntos
+  const map = L.map('map').setView([4.57, -74.25], 12);
 
   L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
     attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China, TomTom',
@@ -29,7 +30,17 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (!coordenadas[0] || !coordenadas[1]) return; // Evita error si las coordenadas están vacías
 
-        const marker = L.marker(coordenadas).addTo(map);
+        // 2. Icono personalizado: Punto verde con borde blanco
+        const iconoPersonalizado = L.divIcon({
+          className: 'bg-emerald-600 rounded-full border-2 border-white shadow-lg',
+          html: '<div style="width:12px;height:12px;background:white;border-radius:50%;"></div>',
+          iconSize: [24, 24],
+          iconAnchor: [12, 12],
+          popupAnchor: [0, -12]
+        });
+
+        const marker = L.marker(coordenadas, { icon: iconoPersonalizado }).addTo(map);
+        
         marker.bindPopup(`<b>${punto.nombre}</b><br><span class="text-xs text-stone-500">${punto.categoria}</span>`);
 
         marker.on('click', () => {
