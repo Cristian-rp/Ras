@@ -12,19 +12,20 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// CONEXIÓN A SUPABASE (Asegúrate de usar la URL con el puerto 6543 en Render)
+// CONEXIÓN A NEON (PostgreSQL)
+// Asegúrate de tener la variable DATABASE_URL configurada en Render y en tu .env local
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
-    rejectUnauthorized: false
+    rejectUnauthorized: false // Necesario para Neon en Render
   }
 });
 
 pool.connect((err, client, release) => {
   if (err) {
-    console.error('Error al conectar a la base de datos PostgreSQL:', err.stack);
+    console.error('Error al conectar a la base de datos PostgreSQL (Neon):', err.stack);
   } else {
-    console.log('¡Conexión exitosa a la base de datos de Supabase!');
+    console.log('¡Conexión exitosa a la base de datos de Neon!');
   }
   if (release) release();
 });
@@ -38,6 +39,7 @@ app.get('/emprendimiento', (req, res) => res.sendFile(path.join(__dirname, 'view
 
 // API REST
 
+// --- RUTA MAPA ---
 app.get('/api/puntos', async (req, res) => {
   try {
     const resultado = await pool.query('SELECT * FROM puntos_interes');
@@ -48,6 +50,7 @@ app.get('/api/puntos', async (req, res) => {
   }
 });
 
+// --- RUTAS RELATOS ---
 app.get('/api/relatos', async (req, res) => {
   try {
     const resultado = await pool.query('SELECT * FROM relatos ORDER BY id DESC');
@@ -74,6 +77,7 @@ app.post('/api/relatos', async (req, res) => {
   }
 });
 
+// --- RUTAS PRODUCTOS (CATÁLOGO) ---
 app.get('/api/productos', async (req, res) => {
   try {
     const resultado = await pool.query('SELECT * FROM productos ORDER BY id DESC');
