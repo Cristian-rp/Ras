@@ -1,0 +1,17 @@
+{
+  "name": "red-ancestral-soacha",
+  "version": "1.0.0",
+  "description": "Plataforma web colaborativa para la preservación del patrimonio y comercio de Soacha",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": ["express", "nodejs", "soacha", "leaflet", "ras"],
+  "author": "Laura Rodríguez y Cristian Ruíz",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  }
+}
