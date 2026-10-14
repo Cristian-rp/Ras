@@ -9,6 +9,8 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// SERVIR ARCHIVOS ESTÁTICOS CORRECTAMENTE
 app.use(express.static(path.join(__dirname, 'public')));
 
 // --- BASE DE DATOS EN MEMORIA ---
@@ -28,7 +30,7 @@ let productos = [
   { id: 2, titulo: "Tejido en Lana de Oveja", artesano: "Tejedoras Muyscas", categoria: "Textil", precio: "50.000 COP", contacto: "573000000000" }
 ];
 
-// --- RUTAS DE NAVEGACIÓN POR PANTALLA ---
+// --- RUTAS DE NAVEGACIÓN ---
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'views', 'index.html')));
 app.get('/mapa', (req, res) => res.sendFile(path.join(__dirname, 'views', 'mapa.html')));
 app.get('/relatos', (req, res) => res.sendFile(path.join(__dirname, 'views', 'relatos.html')));
@@ -36,11 +38,8 @@ app.get('/catalogo', (req, res) => res.sendFile(path.join(__dirname, 'views', 'c
 app.get('/emprendimiento', (req, res) => res.sendFile(path.join(__dirname, 'views', 'emprendimiento.html')));
 
 // --- RUTAS DE LA API REST ---
-
-// Módulo 1: Puntos del mapa
 app.get('/api/puntos', (req, res) => res.json(puntosInteres));
 
-// Módulo 2: Relatos comunitarios
 app.get('/api/relatos', (req, res) => res.json(relatos));
 app.post('/api/relatos', (req, res) => {
   const { titulo, autor, contenido } = req.body;
@@ -58,7 +57,6 @@ app.post('/api/relatos', (req, res) => {
   res.status(201).json(nuevoRelato);
 });
 
-// Módulo 3: Catálogo Comercial
 app.get('/api/productos', (req, res) => res.json(productos));
 
 app.post('/api/productos', (req, res) => {
@@ -78,10 +76,9 @@ app.post('/api/productos', (req, res) => {
   res.status(201).json(nuevoProducto);
 });
 
-// ENDPOINT PROTEGIDO: ELIMINAR UN PRODUCTO DEL CATÁLOGO
 app.delete('/api/productos/:id', (req, res) => {
   const adminKey = req.headers['x-admin-key'];
-  const CLAVE_SECRETA = "admin123"; // Clave requerida para autorizar la eliminación
+  const CLAVE_SECRETA = "admin123";
 
   if (adminKey !== CLAVE_SECRETA) {
     return res.status(401).json({ error: 'Acceso no autorizado. Clave de administrador incorrecta.' });
@@ -101,5 +98,5 @@ app.delete('/api/productos/:id', (req, res) => {
 
 // Iniciar servidor
 app.listen(PORT, () => {
-  console.log(`Servidor de RAS escuchando en http://localhost:${PORT}`);
+  console.log(`Servidor de RAS escuchando en el puerto ${PORT}`);
 });
