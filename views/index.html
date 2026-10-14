@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Red Ancestral de Soacha - RAS</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Leaflet CSS y JS (Mapa interactivo) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body class="bg-stone-50 text-stone-800 font-sans">
+
+  <!-- Header -->
+  <header class="bg-emerald-900 text-white shadow-lg sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+      <div class="flex items-center space-x-3">
+        <div class="bg-emerald-600 font-bold px-3 py-1 rounded text-xl">RAS</div>
+        <h1 class="text-lg font-semibold tracking-wide hidden md:block">Red Ancestral de Soacha</h1>
+      </div>
+      <nav class="space-x-4 text-sm font-medium">
+        <a href="#mapa" class="hover:text-emerald-300">Mapa</a>
+        <a href="#participacion" class="hover:text-emerald-300">Memoria</a>
+        <a href="#catalogo" class="hover:text-emerald-300">Catálogo</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="bg-emerald-800 text-white py-12 px-4 text-center">
+    <h2 class="text-3xl md:text-5xl font-bold mb-4">Preservando el patrimonio e identidad de Soacha</h2>
+    <p class="max-w-2xl mx-auto text-emerald-100 mb-6">Mapeo interactivo, memoria colectiva y comercio justo para nuestros sabedores y artesanos locales.</p>
+    <a href="#mapa" class="bg-amber-500 hover:bg-amber-600 text-stone-900 font-bold px-6 py-3 rounded-lg shadow transition">Explorar Mapa Territorial</a>
+  </section>
+
+  <!-- Sección Mapa (Módulo 1) -->
+  <section id="mapa" class="max-w-7xl mx-auto py-10 px-4">
+    <h3 class="text-2xl font-bold text-emerald-900 mb-4 border-b-2 border-emerald-600 pb-2">1. Mapeo Cultural y Ambiental</h3>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div id="map" class="lg:col-span-2 h-96 rounded-lg shadow-md border border-stone-200"></div>
+      <div class="bg-white p-6 rounded-lg shadow-md border border-stone-200">
+        <h4 class="font-bold text-lg mb-2 text-stone-800">Detalles del Punto</h4>
+        <p class="text-sm text-stone-600 mb-4">Haz clic en un marcador en el mapa para explorar sitios arqueológicos, culturales o ambientales en Soacha.</p>
+        <div class="p-4 bg-emerald-50 rounded border border-emerald-200">
+          <span class="text-xs bg-emerald-700 text-white font-bold px-2 py-0.5 rounded">Patrimonio Cultural</span>
+          <h5 class="font-bold mt-2">Sua Cha - Zona Arqueológica</h5>
+          <p class="text-xs text-stone-600 mt-1">Espacio de alto valor histórico para la memoria ancestral Muysca.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección Participación Ciudadana (Módulo 2) -->
+  <section id="participacion" class="bg-stone-100 py-10 px-4">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex justify-between items-center mb-6 border-b-2 border-emerald-600 pb-2">
+        <h3 class="text-2xl font-bold text-emerald-900">2. Memoria Viva y Relatos</h3>
+        <button class="bg-emerald-700 hover:bg-emerald-800 text-white text-sm px-4 py-2 rounded shadow"> Compartir un Relato</button>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white p-5 rounded-lg shadow border border-stone-200">
+          <h4 class="font-bold text-emerald-800">Cuidado del Humedal Neuta</h4>
+          <p class="text-xs text-stone-400 mb-2">Publicado por: Colectivo Ambiental | Hace 2 días</p>
+          <p class="text-sm text-stone-600">"El humedal no solo es un refugio de biodiversidad, sino un espacio de conexión ancestral que debemos salvaguardar..."</p>
+        </div>
+        <div class="bg-white p-5 rounded-lg shadow border border-stone-200">
+          <h4 class="font-bold text-emerald-800">Tradición Tejendera en Soacha</h4>
+          <p class="text-xs text-stone-400 mb-2">Publicado por: Comunidad Muysca | Hace 5 días</p>
+          <p class="text-sm text-stone-600">"Nuestra abuela nos enseñó el tejido como una forma de plasmar el pensamiento y la memoria del territorio..."</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección Catálogo Comercial (Módulo 3) -->
+  <section id="catalogo" class="max-w-7xl mx-auto py-10 px-4">
+    <h3 class="text-2xl font-bold text-emerald-900 mb-6 border-b-2 border-emerald-600 pb-2">3. Catálogo Cultural y Artesanal</h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      
+      <!-- Card Producto -->
+      <div class="bg-white rounded-lg shadow border border-stone-200 overflow-hidden">
+        <div class="h-40 bg-stone-300 flex items-center justify-center text-stone-500 font-bold">[Foto de Muestra]</div>
+        <div class="p-4">
+          <span class="text-xs bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded">Artesanía</span>
+          <h4 class="font-bold text-lg mt-1">Vasija de Cerámica Ancestral</h4>
+          <p class="text-xs text-stone-500">Por: Artesanos de Soacha</p>
+          <div class="mt-4 flex justify-between items-center">
+            <span class="font-bold text-emerald-900">$ 35.000 COP</span>
+            <button class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-1.5 rounded">Contactar Directo</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Script para inicializar mapa de Soacha -->
+  <script>
+    const map = L.map('map').setView([4.5794, -74.2168], 13);
+
+    // Capa de Esri Maps (libre de bloques e ideal para mapas comunitarios)
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China, TomTom',
+      maxZoom: 19
+    }).addTo(map);
+
+    L.marker([4.5794, -74.2168]).addTo(map)
+      .bindPopup('<b>Soacha Centro</b><br>Sitio de Interés Cultural y Comunitario.')
+      .openPopup();
+  </script>
+</body>
+</html>
