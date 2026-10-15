@@ -62,17 +62,28 @@ document.addEventListener('DOMContentLoaded', () => {
       const autor = document.getElementById('relato-autor').value;
       const contenido = document.getElementById('relato-contenido').value;
 
+      // Leer usuario logueado si existe
+      const usuarioGuardado = localStorage.getItem('usuarioRAS');
+      const usuario = usuarioGuardado ? JSON.parse(usuarioGuardado) : null;
+
       try {
         const res = await fetch('/api/relatos', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ titulo, autor, contenido })
+          body: JSON.stringify({
+            titulo,
+            autor,
+            contenido,
+            usuario_id: usuario ? usuario.id : null
+          })
         });
 
         if (res.ok) {
           formRelato.reset();
-          modal.classList.add('hidden');
-          modal.classList.remove('flex');
+          if (modal) {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+          }
           cargarRelatos();
         } else {
           alert('No se pudo guardar el relato. Intenta nuevamente.');

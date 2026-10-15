@@ -50,10 +50,6 @@ document.addEventListener('DOMContentLoaded', () => {
                    class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2.5 py-1.5 rounded transition">
                    Contactar
                 </a>
-                <button onclick="eliminarProducto(${p.id})" 
-                        class="bg-red-100 hover:bg-red-200 text-red-700 text-xs px-2 py-1.5 rounded font-bold transition">
-                   Eliminar
-                </button>
               </div>
             </div>
           </div>
@@ -63,31 +59,6 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error('Error al cargar el catálogo:', err);
     }
   }
-
-  window.eliminarProducto = async (id) => {
-    const clave = prompt('Para eliminar esta publicación, ingresa tu clave personal de autor o admin:');
-    if (!clave) return;
-
-    try {
-      const res = await fetch(`/api/productos/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'x-owner-key': clave
-        }
-      });
-
-      if (res.ok) {
-        alert('Publicación eliminada correctamente.');
-        cargarProductos();
-      } else {
-        const errorData = await res.json();
-        alert('Error: ' + (errorData.error || 'No se pudo eliminar la publicación'));
-      }
-    } catch (err) {
-      console.error('Error al intentar eliminar el producto:', err);
-      alert('Ocurrió un error al conectar con el servidor.');
-    }
-  };
 
   cargarProductos();
 });

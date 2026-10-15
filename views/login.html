@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acceso y Perfil - Red Ancestral de Soacha</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="bg-stone-100 text-stone-800 font-sans min-h-screen flex flex-col justify-between">
+
+  <!-- Encabezado / Navegación -->
+  <header class="bg-emerald-900 text-white shadow-md">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+      <div class="flex items-center space-x-3">
+        <span class="bg-emerald-700 text-white font-bold px-3 py-1.5 rounded text-sm">RAS</span>
+        <h1 class="font-bold text-lg tracking-wide hidden sm:block">Red Ancestral de Soacha</h1>
+      </div>
+      <nav class="flex space-x-6 text-sm font-medium">
+        <a href="/" class="hover:text-emerald-300 transition">Inicio</a>
+        <a href="/mapa" class="hover:text-emerald-300 transition">Mapa</a>
+        <a href="/relatos" class="hover:text-emerald-300 transition">Memoria</a>
+        <a href="/catalogo" class="hover:text-emerald-300 transition">Catálogo</a>
+        <a href="/login" class="text-amber-400 font-bold border-b-2 border-amber-400 pb-0.5">Mi Perfil</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Contenedor Principal -->
+  <main class="max-w-4xl mx-auto px-4 py-10 w-full flex-grow">
+
+    <!-- SECCIÓN 1: FORMULARIOS DE LOGIN Y REGISTRO (Visibles si no está logueado) -->
+    <div id="seccion-auth" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      
+      <!-- Card Login -->
+      <div class="bg-white p-6 rounded-xl shadow border border-stone-200">
+        <h2 class="text-xl font-bold text-emerald-900 mb-4 border-b pb-2">Iniciar Sesión</h2>
+        <form id="form-login" class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold text-stone-600 mb-1">Correo Electrónico</label>
+            <input type="email" id="login-email" required class="w-full border border-stone-300 p-2.5 rounded text-sm focus:outline-emerald-600">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-stone-600 mb-1">Contraseña</label>
+            <input type="password" id="login-password" required class="w-full border border-stone-300 p-2.5 rounded text-sm focus:outline-emerald-600">
+          </div>
+          <button type="submit" class="w-full bg-emerald-800 hover:bg-emerald-900 text-white font-bold py-2.5 rounded transition text-sm">
+            Ingresar
+          </button>
+        </form>
+      </div>
+
+      <!-- Card Registro -->
+      <div class="bg-white p-6 rounded-xl shadow border border-stone-200">
+        <h2 class="text-xl font-bold text-emerald-900 mb-4 border-b pb-2">Crear Cuenta</h2>
+        <form id="form-registro" class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold text-stone-600 mb-1">Nombre Completo</label>
+            <input type="text" id="reg-nombre" required class="w-full border border-stone-300 p-2.5 rounded text-sm focus:outline-emerald-600">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-stone-600 mb-1">Correo Electrónico</label>
+            <input type="email" id="reg-email" required class="w-full border border-stone-300 p-2.5 rounded text-sm focus:outline-emerald-600">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-stone-600 mb-1">Contraseña</label>
+            <input type="password" id="reg-password" required class="w-full border border-stone-300 p-2.5 rounded text-sm focus:outline-emerald-600">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-stone-600 mb-1">Tipo de Perfil</label>
+            <select id="reg-rol" class="w-full border border-stone-300 p-2.5 rounded text-sm bg-white focus:outline-emerald-600">
+              <option value="usuario">Usuario General (Comentario, Relatos y Consulta)</option>
+              <option value="emprendedor">Emprendedor / Artesano (Publicación en Catálogo)</option>
+            </select>
+          </div>
+          <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-stone-900 font-bold py-2.5 rounded transition text-sm">
+            Registrarme
+          </button>
+        </form>
+      </div>
+
+    </div>
+
+    <!-- SECCIÓN 2: PERFIL DE USUARIO / MURO (Visible solo al iniciar sesión) -->
+    <div id="seccion-perfil" class="hidden space-y-6">
+      
+      <!-- Banner de Perfil -->
+      <div class="bg-white p-6 rounded-xl shadow border border-stone-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+          <span id="perfil-badge" class="text-xs bg-amber-100 text-amber-900 font-bold px-2.5 py-1 rounded">Rol</span>
+          <h2 id="perfil-nombre" class="text-2xl font-bold text-emerald-950 mt-1">Nombre Usuario</h2>
+          <p id="perfil-email" class="text-xs text-stone-500">correo@ejemplo.com</p>
+        </div>
+        <button id="btn-logout" class="bg-red-100 hover:bg-red-200 text-red-700 font-bold px-4 py-2 rounded text-xs transition">
+          Cerrar Sesión
+        </button>
+      </div>
+
+      <!-- Muro de Publicaciones Propias -->
+      <div class="space-y-6">
+        
+        <!-- Relatos Propios -->
+        <div class="bg-white p-6 rounded-xl shadow border border-stone-200">
+          <h3 class="font-bold text-lg text-emerald-900 mb-4 border-b pb-2">Mis Relatos en Memoria Viva</h3>
+          <div id="mis-relatos" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Se carga dinámicamente -->
+          </div>
+        </div>
+
+        <!-- Productos Propios (Solo visibles para Emprendedores) -->
+        <div id="box-mis-productos" class="bg-white p-6 rounded-xl shadow border border-stone-200 hidden">
+          <div class="flex justify-between items-center mb-4 border-b pb-2">
+            <h3 class="font-bold text-lg text-emerald-900">Mis Productos / Servicios en Catálogo</h3>
+            <a href="/emprendimiento" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs px-3 py-1.5 rounded font-bold transition">
+              + Publicar Nuevo Producto
+            </a>
+          </div>
+          <div id="mis-productos" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Se carga dinámicamente -->
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Pie de Página -->
+  <footer class="bg-stone-900 text-stone-400 text-xs py-6 mt-12 border-t border-stone-800 text-center">
+    <p>&copy; 2026 Red Ancestral de Soacha (RAS) — Todos los derechos reservados.</p>
+  </footer>
+
+  <script src="/js/auth.js"></script>
+</body>
+</html>

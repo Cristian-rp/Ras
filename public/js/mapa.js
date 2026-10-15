@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // 1. Inicializar el mapa con una vista más amplia para ver todos los puntos
+  // Inicializar el mapa centrado en Soacha
   const map = L.map('map').setView([4.57, -74.25], 12);
 
   L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
@@ -25,12 +25,11 @@ document.addEventListener('DOMContentLoaded', () => {
       const puntos = await res.json();
 
       puntos.forEach(punto => {
-        // Soporta estructura de BD (latitud/longitud) o arreglo estático (coords)
         const coordenadas = punto.coords ? punto.coords : [punto.latitud, punto.longitud];
         
-        if (!coordenadas[0] || !coordenadas[1]) return; // Evita error si las coordenadas están vacías
+        if (!coordenadas[0] || !coordenadas[1]) return;
 
-        // 2. Icono personalizado: Punto verde con borde blanco
+        // Icono personalizado: Punto verde con borde blanco
         const iconoPersonalizado = L.divIcon({
           className: 'bg-emerald-600 rounded-full border-2 border-white shadow-lg',
           html: '<div style="width:12px;height:12px;background:white;border-radius:50%;"></div>',
@@ -44,9 +43,13 @@ document.addEventListener('DOMContentLoaded', () => {
         marker.bindPopup(`<b>${punto.nombre}</b><br><span class="text-xs text-stone-500">${punto.categoria}</span>`);
 
         marker.on('click', () => {
-          document.getElementById('sitio-nombre').innerText = punto.nombre;
-          document.getElementById('sitio-categoria').innerText = punto.categoria;
-          document.getElementById('sitio-descripcion').innerText = punto.descripcion;
+          const elNombre = document.getElementById('sitio-nombre');
+          const elCat = document.getElementById('sitio-categoria');
+          const elDesc = document.getElementById('sitio-descripcion');
+
+          if (elNombre) elNombre.innerText = punto.nombre;
+          if (elCat) elCat.innerText = punto.categoria;
+          if (elDesc) elDesc.innerText = punto.descripcion;
         });
       });
     } catch (err) {
