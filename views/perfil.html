@@ -29,14 +29,86 @@
   </header>
 
   <!-- Módulo de Perfil del Usuario -->
-  <main class="flex-grow max-w-5xl mx-auto px-4 py-10 w-full">
+  <main class="flex-grow max-w-5xl mx-auto px-4 py-8 w-full">
+    <!-- Card de Información de Usuario -->
     <div class="bg-white p-6 rounded-lg shadow-md border border-stone-200 mb-8">
       <h2 class="text-2xl font-bold text-emerald-900 mb-2" id="perfil-nombre">Cargando perfil...</h2>
       <p class="text-stone-600 text-sm mb-1"><strong>Correo:</strong> <span id="perfil-email">...</span></p>
       <p class="text-stone-600 text-sm"><strong>Rol:</strong> <span id="perfil-rol" class="capitalize font-semibold text-emerald-800">...</span></p>
     </div>
 
-    <!-- Publicaciones y Contenidos del Usuario -->
+    <!-- Módulo de Crear Nueva Publicación (Condicionado por Rol) -->
+    <div class="bg-white p-6 rounded-lg shadow-md border border-stone-200 mb-8">
+      <h3 class="text-xl font-bold text-emerald-900 mb-4 border-b pb-2">Hacer una Publicación</h3>
+
+      <!-- Selector de Tipo de Publicación (Solo visible para emprendedores) -->
+      <div id="selector-tipo-pub" class="mb-6 hidden">
+        <label class="block text-sm font-medium text-stone-700 mb-2">¿Qué deseas publicar?</label>
+        <div class="flex space-x-4">
+          <button id="btn-tipo-relato" type="button" class="px-4 py-2 rounded-md font-bold text-sm bg-emerald-700 text-white transition">
+            Relato / Memoria
+          </button>
+          <button id="btn-tipo-producto" type="button" class="px-4 py-2 rounded-md font-bold text-sm bg-stone-200 text-stone-700 hover:bg-stone-300 transition">
+            Producto / Catálogo
+          </button>
+        </div>
+      </div>
+
+      <!-- FORMULARIO A: Publicar Relato -->
+      <form id="form-publicar-relato" class="space-y-4">
+        <h4 class="text-md font-semibold text-emerald-800">Nuevo Relato o Reseña</h4>
+        <div>
+          <label for="relato-titulo" class="block text-sm font-medium text-stone-700 mb-1">Título del Relato</label>
+          <input type="text" id="relato-titulo" required class="w-full px-3 py-2 border border-stone-300 rounded-md focus:ring-2 focus:ring-emerald-600 focus:outline-none" placeholder="Ej. Historia del Salto del Tequendama">
+        </div>
+        <div>
+          <label for="relato-contenido" class="block text-sm font-medium text-stone-700 mb-1">Contenido / Historia</label>
+          <textarea id="relato-contenido" rows="4" required class="w-full px-3 py-2 border border-stone-300 rounded-md focus:ring-2 focus:ring-emerald-600 focus:outline-none" placeholder="Escribe aquí tu relato sobre la cultura o tradición local..."></textarea>
+        </div>
+        <button type="submit" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-2 px-6 rounded-md shadow transition">
+          Publicar Relato
+        </button>
+      </form>
+
+      <!-- FORMULARIO B: Publicar Producto (Solo Emprendedores) -->
+      <form id="form-publicar-producto" class="space-y-4 hidden">
+        <h4 class="text-md font-semibold text-amber-800">Nuevo Producto para el Catálogo</h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label for="prod-titulo" class="block text-sm font-medium text-stone-700 mb-1">Nombre del Producto / Servicio</label>
+            <input type="text" id="prod-titulo" required class="w-full px-3 py-2 border border-stone-300 rounded-md focus:ring-2 focus:ring-emerald-600 focus:outline-none" placeholder="Ej. Vasija de Cerámica Muisca">
+          </div>
+          <div>
+            <label for="prod-categoria" class="block text-sm font-medium text-stone-700 mb-1">Categoría</label>
+            <select id="prod-categoria" class="w-full px-3 py-2 border border-stone-300 rounded-md bg-white focus:ring-2 focus:ring-emerald-600 focus:outline-none">
+              <option value="Artesanía / Cerámica">Artesanía / Cerámica</option>
+              <option value="Gastronomía Tradicional">Gastronomía Tradicional</option>
+              <option value="Textil / Tejido">Textil / Tejido</option>
+              <option value="Taller / Guianza Cultural">Taller / Guianza Cultural</option>
+            </select>
+          </div>
+          <div>
+            <label for="prod-precio" class="block text-sm font-medium text-stone-700 mb-1">Precio (COP)</label>
+            <input type="number" id="prod-precio" required class="w-full px-3 py-2 border border-stone-300 rounded-md focus:ring-2 focus:ring-emerald-600 focus:outline-none" placeholder="Ej. 25000">
+          </div>
+          <div>
+            <label for="prod-contacto" class="block text-sm font-medium text-stone-700 mb-1">Contacto (Teléfono / WhatsApp)</label>
+            <input type="text" id="prod-contacto" required class="w-full px-3 py-2 border border-stone-300 rounded-md focus:ring-2 focus:ring-emerald-600 focus:outline-none" placeholder="Ej. 3001234567">
+          </div>
+        </div>
+        <div>
+          <label for="prod-imagen" class="block text-sm font-medium text-stone-700 mb-1">URL de Imagen (Opcional)</label>
+          <input type="url" id="prod-imagen" class="w-full px-3 py-2 border border-stone-300 rounded-md focus:ring-2 focus:ring-emerald-600 focus:outline-none" placeholder="https://ejemplo.com/imagen.jpg">
+        </div>
+        <button type="submit" class="bg-amber-500 hover:bg-amber-600 text-stone-900 font-bold py-2 px-6 rounded-md shadow transition">
+          Publicar Producto
+        </button>
+      </form>
+
+      <div id="msg-pub-alerta" class="mt-4 text-center text-sm font-medium hidden"></div>
+    </div>
+
+    <!-- Módulo de Publicaciones Realizadas -->
     <div class="space-y-6">
       <h3 class="text-xl font-bold text-emerald-900 border-b-2 border-emerald-600 pb-2">Mis Publicaciones</h3>
       <div id="contenedor-publicaciones" class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -59,59 +131,155 @@
 
       const usuario = JSON.parse(usuarioSesion);
 
-      // Configuración de Menú según rol
+      // Mostrar datos del usuario
+      document.getElementById('perfil-nombre').textContent = usuario.nombre;
+      document.getElementById('perfil-email').textContent = usuario.email;
+      document.getElementById('perfil-rol').textContent = usuario.rol;
+
       const navEmprendimiento = document.getElementById('nav-emprendimiento');
+      const selectorTipoPub = document.getElementById('selector-tipo-pub');
+      const btnTipoRelato = document.getElementById('btn-tipo-relato');
+      const btnTipoProducto = document.getElementById('btn-tipo-producto');
+      const formRelato = document.getElementById('form-publicar-relato');
+      const formProducto = document.getElementById('form-publicar-producto');
+      const msgAlerta = document.getElementById('msg-pub-alerta');
+
+      // 1. Configuración según ROL
       if (usuario.rol === 'emprendedor') {
-        navEmprendimiento.classList.remove('hidden');
+        if (navEmprendimiento) navEmprendimiento.classList.remove('hidden');
+        selectorTipoPub.classList.remove('hidden'); // Permitir elegir tipo de publicación
+
+        // Alternar entre Relato y Producto
+        btnTipoRelato.addEventListener('click', () => {
+          btnTipoRelato.className = 'px-4 py-2 rounded-md font-bold text-sm bg-emerald-700 text-white transition';
+          btnTipoProducto.className = 'px-4 py-2 rounded-md font-bold text-sm bg-stone-200 text-stone-700 hover:bg-stone-300 transition';
+          formRelato.classList.remove('hidden');
+          formProducto.classList.add('hidden');
+        });
+
+        btnTipoProducto.addEventListener('click', () => {
+          btnTipoProducto.className = 'px-4 py-2 rounded-md font-bold text-sm bg-amber-500 text-stone-900 transition';
+          btnTipoRelato.className = 'px-4 py-2 rounded-md font-bold text-sm bg-stone-200 text-stone-700 hover:bg-stone-300 transition';
+          formProducto.classList.remove('hidden');
+          formRelato.classList.add('hidden');
+        });
       }
 
+      // Logout
       document.getElementById('btn-logout').addEventListener('click', () => {
         localStorage.removeItem('usuarioRAS');
         window.location.href = '/login';
       });
 
-      // Cargar Datos del Perfil
-      document.getElementById('perfil-nombre').textContent = usuario.nombre;
-      document.getElementById('perfil-email').textContent = usuario.email;
-      document.getElementById('perfil-rol').textContent = usuario.rol;
+      // 2. Enviar Formulario de Relato
+      formRelato.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const titulo = document.getElementById('relato-titulo').value;
+        const contenido = document.getElementById('relato-contenido').value;
 
-      // Obtener publicaciones del usuario desde la API
-      try {
-        const res = await fetch(`/api/usuario/${usuario.id}/publicaciones`);
-        const data = await res.json();
+        try {
+          const res = await fetch('/api/relatos', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              titulo,
+              autor: usuario.nombre,
+              contenido,
+              usuario_id: usuario.id
+            })
+          });
 
-        const contenedor = document.getElementById('contenedor-publicaciones');
-        contenedor.innerHTML = '';
-
-        if (data.relatos.length === 0 && data.productos.length === 0) {
-          contenedor.innerHTML = '<p class="text-stone-500 text-sm col-span-2">Aún no has realizado ninguna publicación.</p>';
-          return;
+          if (res.ok) {
+            msgAlerta.className = 'mt-4 text-center text-sm font-medium text-emerald-700 bg-emerald-50 p-2 rounded';
+            msgAlerta.textContent = '¡Relato publicado con éxito!';
+            msgAlerta.classList.remove('hidden');
+            formRelato.reset();
+            cargarPublicaciones(usuario.id);
+          }
+        } catch (err) {
+          console.error(err);
         }
+      });
 
-        // Renderizar Relatos
-        data.relatos.forEach(relato => {
-          contenedor.innerHTML += `
-            <div class="bg-white p-4 rounded shadow border border-stone-200">
-              <span class="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">Relato</span>
-              <h4 class="font-bold text-lg mt-1">${relato.titulo}</h4>
-              <p class="text-sm text-stone-600 mt-2">${relato.contenido}</p>
-            </div>
-          `;
-        });
+      // 3. Enviar Formulario de Producto (Solo Emprendedores)
+      formProducto.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const titulo = document.getElementById('prod-titulo').value;
+        const categoria = document.getElementById('prod-categoria').value;
+        const precio = document.getElementById('prod-precio').value;
+        const contacto = document.getElementById('prod-contacto').value;
+        const imagen_url = document.getElementById('prod-imagen').value;
 
-        // Renderizar Productos
-        data.productos.forEach(prod => {
-          contenedor.innerHTML += `
-            <div class="bg-white p-4 rounded shadow border border-stone-200">
-              <span class="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-bold">Producto</span>
-              <h4 class="font-bold text-lg mt-1">${prod.titulo}</h4>
-              <p class="text-sm text-stone-600 font-bold">$ ${prod.precio} COP</p>
-            </div>
-          `;
-        });
-      } catch (err) {
-        console.error('Error al cargar publicaciones:', err);
+        try {
+          const res = await fetch('/api/productos', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              titulo,
+              artesano: usuario.nombre,
+              categoria,
+              precio,
+              contacto,
+              imagen_url,
+              usuario_id: usuario.id
+            })
+          });
+
+          if (res.ok) {
+            msgAlerta.className = 'mt-4 text-center text-sm font-medium text-emerald-700 bg-emerald-50 p-2 rounded';
+            msgAlerta.textContent = '¡Producto registrado en el catálogo!';
+            msgAlerta.classList.remove('hidden');
+            formProducto.reset();
+            cargarPublicaciones(usuario.id);
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      });
+
+      // 4. Función para Cargar Publicaciones del Usuario
+      async function cargarPublicaciones(idUsuario) {
+        try {
+          const res = await fetch(`/api/usuario/${idUsuario}/publicaciones`);
+          const data = await res.json();
+
+          const contenedor = document.getElementById('contenedor-publicaciones');
+          contenedor.innerHTML = '';
+
+          if (data.relatos.length === 0 && data.productos.length === 0) {
+            contenedor.innerHTML = '<p class="text-stone-500 text-sm col-span-2">Aún no has realizado ninguna publicación.</p>';
+            return;
+          }
+
+          // Pintar Relatos
+          data.relatos.forEach(relato => {
+            contenedor.innerHTML += `
+              <div class="bg-white p-4 rounded shadow border border-stone-200">
+                <span class="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">Relato</span>
+                <h4 class="font-bold text-lg mt-1">${relato.titulo}</h4>
+                <p class="text-sm text-stone-600 mt-2">${relato.contenido}</p>
+              </div>
+            `;
+          });
+
+          // Pintar Productos
+          data.productos.forEach(prod => {
+            contenedor.innerHTML += `
+              <div class="bg-white p-4 rounded shadow border border-stone-200">
+                <span class="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-bold">Producto en Catálogo</span>
+                <h4 class="font-bold text-lg mt-1">${prod.titulo}</h4>
+                <p class="text-xs text-stone-500 mb-1">Categoría: ${prod.categoria}</p>
+                <p class="text-sm text-emerald-900 font-bold">$ ${prod.precio} COP</p>
+              </div>
+            `;
+          });
+        } catch (err) {
+          console.error('Error al cargar publicaciones:', err);
+        }
       }
+
+      // Carga inicial de publicaciones
+      cargarPublicaciones(usuario.id);
     });
   </script>
 </body>
