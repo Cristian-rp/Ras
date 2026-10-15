@@ -147,7 +147,8 @@
           msgAlerta.textContent = '¡Credenciales correctas! Ingresando a la plataforma...';
           msgAlerta.classList.remove('hidden');
 
-          setTimeout(() => { window.location.href = '/'; }, 1000);
+          // REDIRECCIÓN CORRECTA A /inicio EN LUGAR DE /
+          setTimeout(() => { window.location.href = '/inicio'; }, 1000);
         } else {
           msgAlerta.className = 'mt-4 text-center text-sm font-medium text-red-600 bg-red-50 p-2 rounded';
           msgAlerta.textContent = data.error || 'Credenciales incorrectas';
@@ -184,6 +185,7 @@
           setTimeout(() => {
             boxRegistro.classList.add('hidden');
             boxLogin.classList.remove('hidden');
+            msgAlerta.classList.add('hidden');
           }, 1500);
         } else {
           msgAlerta.className = 'mt-4 text-center text-sm font-medium text-red-600 bg-red-50 p-2 rounded';
