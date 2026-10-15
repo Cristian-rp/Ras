@@ -126,163 +126,43 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
-      const usuarioSesion = localStorage.getItem('usuarioRAS');
-      if (!usuarioSesion) {
+    // 1. Validar que exista la sesión
+    const usuarioSesion = localStorage.getItem('usuarioRAS');
+    if (!usuarioSesion) {
         window.location.href = '/login';
         return;
-      }
+    }
 
-      const usuario = JSON.parse(usuarioSesion);
+    const usuario = JSON.parse(usuarioSesion);
 
-      // Mostrar datos del usuario
-      document.getElementById('perfil-nombre').textContent = usuario.nombre;
-      document.getElementById('perfil-email').textContent = usuario.email;
-      document.getElementById('perfil-rol').textContent = usuario.rol;
+    // 2. Pintar los datos del usuario en su tarjeta de perfil
+    document.getElementById('perfil-nombre').textContent = usuario.nombre;
+    document.getElementById('perfil-email').textContent = usuario.email;
+    document.getElementById('perfil-rol').textContent = usuario.rol;
 
-      const navEmprendimiento = document.getElementById('nav-emprendimiento');
-      const selectorTipoPub = document.getElementById('selector-tipo-pub');
-      const btnTipoRelato = document.getElementById('btn-tipo-relato');
-      const btnTipoProducto = document.getElementById('btn-tipo-producto');
-      const formRelato = document.getElementById('form-publicar-relato');
-      const formProducto = document.getElementById('form-publicar-producto');
-      const msgAlerta = document.getElementById('msg-pub-alerta');
+    // 3. MANTENER OCULTO el botón del menú superior
+    const navEmprendimiento = document.getElementById('nav-emprendimiento');
+    if (navEmprendimiento) {
+        navEmprendimiento.classList.add('hidden'); // Nunca se muestra en el menú superior
+    }
 
-      // 1. Configuración según ROL
-      if (usuario.rol === 'emprendedor') {
-        if (navEmprendimiento) navEmprendimiento.classList.remove('hidden');
-        selectorTipoPub.classList.remove('hidden'); // Permitir elegir tipo de publicación
+    // 4. MOSTRAR el selector interno de publicaciones SOLO si es emprendedor
+    const selectorTipoPub = document.getElementById('selector-tipo-pub');
+    if (usuario.rol === 'emprendedor' && selectorTipoPub) {
+        selectorTipoPub.classList.remove('hidden'); // Le quita el 'hidden' al selector del formulario interno
+    }
 
-        // Alternar entre Relato y Producto
-        btnTipoRelato.addEventListener('click', () => {
-          btnTipoRelato.className = 'px-4 py-2 rounded-md font-bold text-sm bg-emerald-700 text-white transition';
-          btnTipoProducto.className = 'px-4 py-2 rounded-md font-bold text-sm bg-stone-200 text-stone-700 hover:bg-stone-300 transition';
-          formRelato.classList.remove('hidden');
-          formProducto.classList.add('hidden');
-        });
-
-        btnTipoProducto.addEventListener('click', () => {
-          btnTipoProducto.className = 'px-4 py-2 rounded-md font-bold text-sm bg-amber-500 text-stone-900 transition';
-          btnTipoRelato.className = 'px-4 py-2 rounded-md font-bold text-sm bg-stone-200 text-stone-700 hover:bg-stone-300 transition';
-          formProducto.classList.remove('hidden');
-          formRelato.classList.add('hidden');
-        });
-      }
-
-      // Logout
-      document.getElementById('btn-logout').addEventListener('click', () => {
+    // 5. Configurar el botón de Cerrar Sesión
+    const btnLogout = document.getElementById('btn-logout');
+    if (btnLogout) {
+        btnLogout.addEventListener('click', () => {
         localStorage.removeItem('usuarioRAS');
         window.location.href = '/login';
-      });
+        });
+    }
 
-      // 2. Enviar Formulario de Relato
-      formRelato.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const titulo = document.getElementById('relato-titulo').value;
-        const contenido = document.getElementById('relato-contenido').value;
-
-        try {
-          const res = await fetch('/api/relatos', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              titulo,
-              autor: usuario.nombre,
-              contenido,
-              usuario_id: usuario.id
-            })
-          });
-
-          if (res.ok) {
-            msgAlerta.className = 'mt-4 text-center text-sm font-medium text-emerald-700 bg-emerald-50 p-2 rounded';
-            msgAlerta.textContent = '¡Relato publicado con éxito!';
-            msgAlerta.classList.remove('hidden');
-            formRelato.reset();
-            cargarPublicaciones(usuario.id);
-          }
-        } catch (err) {
-          console.error(err);
-        }
-      });
-
-      // 3. Enviar Formulario de Producto (Solo Emprendedores)
-      formProducto.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const titulo = document.getElementById('prod-titulo').value;
-        const categoria = document.getElementById('prod-categoria').value;
-        const precio = document.getElementById('prod-precio').value;
-        const contacto = document.getElementById('prod-contacto').value;
-        const imagen_url = document.getElementById('prod-imagen').value;
-
-        try {
-          const res = await fetch('/api/productos', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              titulo,
-              artesano: usuario.nombre,
-              categoria,
-              precio,
-              contacto,
-              imagen_url,
-              usuario_id: usuario.id
-            })
-          });
-
-          if (res.ok) {
-            msgAlerta.className = 'mt-4 text-center text-sm font-medium text-emerald-700 bg-emerald-50 p-2 rounded';
-            msgAlerta.textContent = '¡Producto registrado en el catálogo!';
-            msgAlerta.classList.remove('hidden');
-            formProducto.reset();
-            cargarPublicaciones(usuario.id);
-          }
-        } catch (err) {
-          console.error(err);
-        }
-      });
-
-      // 4. Función para Cargar Publicaciones del Usuario
-      async function cargarPublicaciones(idUsuario) {
-        try {
-          const res = await fetch(`/api/usuario/${idUsuario}/publicaciones`);
-          const data = await res.json();
-
-          const contenedor = document.getElementById('contenedor-publicaciones');
-          contenedor.innerHTML = '';
-
-          if (data.relatos.length === 0 && data.productos.length === 0) {
-            contenedor.innerHTML = '<p class="text-stone-500 text-sm col-span-2">Aún no has realizado ninguna publicación.</p>';
-            return;
-          }
-
-          // Pintar Relatos
-          data.relatos.forEach(relato => {
-            contenedor.innerHTML += `
-              <div class="bg-white p-4 rounded shadow border border-stone-200">
-                <span class="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">Relato</span>
-                <h4 class="font-bold text-lg mt-1">${relato.titulo}</h4>
-                <p class="text-sm text-stone-600 mt-2">${relato.contenido}</p>
-              </div>
-            `;
-          });
-
-          // Pintar Productos
-          data.productos.forEach(prod => {
-            contenedor.innerHTML += `
-              <div class="bg-white p-4 rounded shadow border border-stone-200">
-                <span class="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-bold">Producto en Catálogo</span>
-                <h4 class="font-bold text-lg mt-1">${prod.titulo}</h4>
-                <p class="text-xs text-stone-500 mb-1">Categoría: ${prod.categoria}</p>
-                <p class="text-sm text-emerald-900 font-bold">$ ${prod.precio} COP</p>
-              </div>
-            `;
-          });
-        } catch (err) {
-          console.error('Error al cargar publicaciones:', err);
-        }
-      }
-
-      // Carga inicial de publicaciones
-      cargarPublicaciones(usuario.id);
+    // 6. Cargar las publicaciones del usuario
+    cargarPublicaciones(usuario.id);
     });
   </script>
 </body>
