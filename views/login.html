@@ -108,6 +108,15 @@
   </footer>
 
   <script>
+    // 1. Comprobación automática de sesión iniciada
+    document.addEventListener('DOMContentLoaded', () => {
+      const usuarioGuardado = localStorage.getItem('usuarioRAS');
+      if (usuarioGuardado) {
+        // Si ya inició sesión, redirigir directamente al inicio
+        window.location.href = '/inicio';
+      }
+    });
+
     const boxLogin = document.getElementById('box-login');
     const boxRegistro = document.getElementById('box-registro');
     const btnVerRegistro = document.getElementById('btn-ver-registro');
@@ -142,12 +151,13 @@
         const data = await res.json();
 
         if (res.ok) {
+          // Guardar sesión del usuario en localStorage
           localStorage.setItem('usuarioRAS', JSON.stringify(data.usuario));
           msgAlerta.className = 'mt-4 text-center text-sm font-medium text-emerald-700 bg-emerald-50 p-2 rounded';
           msgAlerta.textContent = '¡Credenciales correctas! Ingresando a la plataforma...';
           msgAlerta.classList.remove('hidden');
 
-          // REDIRECCIÓN CORRECTA A /inicio EN LUGAR DE /
+          // Redirección directa a la vista de inicio (/inicio)
           setTimeout(() => { window.location.href = '/inicio'; }, 1000);
         } else {
           msgAlerta.className = 'mt-4 text-center text-sm font-medium text-red-600 bg-red-50 p-2 rounded';
