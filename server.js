@@ -34,12 +34,15 @@ pool.connect((err, client, release) => {
 // ==========================================
 // RUTAS DE VISTAS HTML
 // ==========================================
-app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'views', 'index.html')));
+// Redirección inicial obligatoria al Login
+app.get('/', (req, res) => res.redirect('/login'));
+app.get('/login', (req, res) => res.sendFile(path.join(__dirname, 'views', 'login.html')));
+app.get('/inicio', (req, res) => res.sendFile(path.join(__dirname, 'views', 'index.html')));
 app.get('/mapa', (req, res) => res.sendFile(path.join(__dirname, 'views', 'mapa.html')));
 app.get('/relatos', (req, res) => res.sendFile(path.join(__dirname, 'views', 'relatos.html')));
 app.get('/catalogo', (req, res) => res.sendFile(path.join(__dirname, 'views', 'catalogo.html')));
 app.get('/emprendimiento', (req, res) => res.sendFile(path.join(__dirname, 'views', 'emprendimiento.html')));
-app.get('/login', (req, res) => res.sendFile(path.join(__dirname, 'views', 'login.html')));
+app.get('/perfil', (req, res) => res.sendFile(path.join(__dirname, 'views', 'perfil.html')));
 
 // ==========================================
 // 1. RUTAS DE AUTENTICACIÓN Y USUARIOS
@@ -106,7 +109,7 @@ app.post('/api/auth/login', async (req, res) => {
   }
 });
 
-// Consultar publicaciones del perfil de un usuario (Muro tipo Red Social)
+// Consultar perfil del usuario (Muro tipo Red Social)
 app.get('/api/usuario/:id/publicaciones', async (req, res) => {
   const { id } = req.params;
 
@@ -135,11 +138,11 @@ app.get('/api/usuario/:id/publicaciones', async (req, res) => {
 // ==========================================
 app.get('/api/puntos', async (req, res) => {
   try {
-    const resultado = await pool.query('SELECT * FROM puntos_interes');
+    const resultado = await pool.query('SELECT * FROM puntos_interes ORDER BY id ASC');
     res.json(resultado.rows);
   } catch (err) {
     console.error('Error al obtener puntos del mapa:', err);
-    res.status(500).json({ error: 'Error al consultar puntos' });
+    res.status(500).json({ error: 'Error al consultar puntos del mapa' });
   }
 });
 
@@ -220,7 +223,7 @@ app.get('/api/productos', async (req, res) => {
 });
 
 app.post('/api/productos', async (req, res) => {
-  const { titulo, artesano, categoria, precio, contacto, claveBorrado, usuario_id } = req.body;
+  const { titulo, artesano, categoria, precio, contacto, imagen_url, claveBorrado, usuario_id } = req.body;
 
   if (!titulo || !artesano || !categoria || !precio || !contacto) {
     return res.status(400).json({ error: 'Todos los campos obligatorios deben diligenciarse' });
@@ -228,8 +231,8 @@ app.post('/api/productos', async (req, res) => {
 
   try {
     const query = `
-      INSERT INTO productos (titulo, artesano, categoria, precio, contacto, clave_borrado, usuario_id) 
-      VALUES ($1, $2, $3, $4, $5, $6, $7) 
+      INSERT INTO productos (titulo, artesano, categoria, precio, contacto, imagen_url, clave_borrado, usuario_id) 
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8) 
       RETURNING *;
     `;
     const resultado = await pool.query(query, [
@@ -238,6 +241,7 @@ app.post('/api/productos', async (req, res) => {
       categoria,
       precio,
       contacto,
+      imagen_url || null,
       claveBorrado || '1234',
       usuario_id || null
     ]);
