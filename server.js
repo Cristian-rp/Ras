@@ -32,7 +32,7 @@ pool.connect((err, client, release) => {
 });
 
 // ==========================================
-// RUTAS VISTAS HTML
+// RUTAS DE VISTAS HTML
 // ==========================================
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'views', 'index.html')));
 app.get('/mapa', (req, res) => res.sendFile(path.join(__dirname, 'views', 'mapa.html')));
