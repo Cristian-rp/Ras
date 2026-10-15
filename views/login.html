@@ -9,25 +9,13 @@
 </head>
 <body class="bg-stone-50 text-stone-800 font-sans flex flex-col min-h-screen">
 
-  <!-- HEADER SIN EL BOTÓN DE ZONA EMPRENDEDOR -->
+  <!-- Header Mínimo EXCLUSIVO para Login / Registro (Sin menú de navegación) -->
   <header class="bg-emerald-900 text-white shadow-lg sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
       <div class="flex items-center space-x-3">
-        <a href="/inicio" class="bg-emerald-600 font-bold px-3 py-1 rounded text-xl text-white">RAS</a>
-        <h1 class="text-lg font-semibold tracking-wide hidden md:block">Red Ancestral de Soacha</h1>
+        <span class="bg-emerald-600 font-bold px-3 py-1 rounded text-xl text-white">RAS</span>
+        <h1 class="text-lg font-semibold tracking-wide">Red Ancestral de Soacha</h1>
       </div>
-      
-      <nav class="flex items-center space-x-4 text-sm font-medium">
-        <a href="/inicio" class="hover:text-emerald-300">Inicio</a>
-        <a href="/mapa" class="hover:text-emerald-300">Mapa</a>
-        <a href="/relatos" class="hover:text-emerald-300">Relatos</a>
-        <a href="/catalogo" class="hover:text-emerald-300">Catálogo</a>
-        <a href="/perfil" class="hover:text-emerald-300">Mi Perfil</a>
-        
-        <button id="btn-logout" class="bg-red-600 hover:bg-red-700 text-white text-xs px-3 py-1.5 rounded transition">
-          Cerrar Sesión
-        </button>
-      </nav>
     </div>
   </header>
 
@@ -120,11 +108,10 @@
   </footer>
 
   <script>
-    // 1. Comprobación automática de sesión iniciada
     document.addEventListener('DOMContentLoaded', () => {
+      // Si el usuario ya está autenticado en localStorage, se le redirige fuera del login
       const usuarioGuardado = localStorage.getItem('usuarioRAS');
       if (usuarioGuardado) {
-        // Si ya inició sesión, redirigir directamente al inicio
         window.location.href = '/inicio';
       }
     });
@@ -135,18 +122,20 @@
     const btnVerLogin = document.getElementById('btn-ver-login');
     const msgAlerta = document.getElementById('msg-alerta');
 
-    // Alternar entre login y registro
-    btnVerRegistro.addEventListener('click', () => {
-      boxLogin.classList.add('hidden');
-      boxRegistro.classList.remove('hidden');
-      msgAlerta.classList.add('hidden');
-    });
+    // Alternar vistas entre Login y Registro
+    if (btnVerRegistro && btnVerLogin) {
+      btnVerRegistro.addEventListener('click', () => {
+        boxLogin.classList.add('hidden');
+        boxRegistro.classList.remove('hidden');
+        msgAlerta.classList.add('hidden');
+      });
 
-    btnVerLogin.addEventListener('click', () => {
-      boxRegistro.classList.add('hidden');
-      boxLogin.classList.remove('hidden');
-      msgAlerta.classList.add('hidden');
-    });
+      btnVerLogin.addEventListener('click', () => {
+        boxRegistro.classList.add('hidden');
+        boxLogin.classList.remove('hidden');
+        msgAlerta.classList.add('hidden');
+      });
+    }
 
     // Petición Login
     document.getElementById('form-login').addEventListener('submit', async (e) => {
@@ -163,13 +152,11 @@
         const data = await res.json();
 
         if (res.ok) {
-          // Guardar sesión del usuario en localStorage
           localStorage.setItem('usuarioRAS', JSON.stringify(data.usuario));
           msgAlerta.className = 'mt-4 text-center text-sm font-medium text-emerald-700 bg-emerald-50 p-2 rounded';
           msgAlerta.textContent = '¡Credenciales correctas! Ingresando a la plataforma...';
           msgAlerta.classList.remove('hidden');
 
-          // Redirección directa a la vista de inicio (/inicio)
           setTimeout(() => { window.location.href = '/inicio'; }, 1000);
         } else {
           msgAlerta.className = 'mt-4 text-center text-sm font-medium text-red-600 bg-red-50 p-2 rounded';
