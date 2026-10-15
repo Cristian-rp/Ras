@@ -9,18 +9,33 @@
 </head>
 <body class="bg-stone-50 text-stone-800 font-sans flex flex-col min-h-screen">
 
+  <!-- HEADER UNIFICADO RAS -->
   <header class="bg-emerald-900 text-white shadow-lg sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+      <!-- Logo e Identidad -->
       <div class="flex items-center space-x-3">
-        <a href="/" class="bg-emerald-600 font-bold px-3 py-1 rounded text-xl hover:bg-emerald-500 transition">RAS</a>
+        <a href="/inicio" class="bg-emerald-600 font-bold px-3 py-1 rounded text-xl text-white">RAS</a>
         <h1 class="text-lg font-semibold tracking-wide hidden md:block">Red Ancestral de Soacha</h1>
       </div>
-      <nav class="space-x-4 text-sm font-medium">
-        <a href="/" class="hover:text-emerald-300 transition">Inicio</a>
-        <a href="/mapa" class="hover:text-emerald-300 transition">Mapa</a>
-        <a href="/relatos" class="hover:text-emerald-300 transition">Memoria</a>
-        <a href="/catalogo" class="hover:text-emerald-300 transition">Catálogo</a>
-        <a href="/emprendimiento" class="text-amber-300 font-bold border-b-2 border-amber-300 pb-1">+ Zona Emprendedor</a>
+      
+      <!-- Menú de Navegación Estandarizado -->
+      <nav class="flex items-center space-x-4 text-sm font-medium">
+        <a href="/inicio" class="hover:text-emerald-300">Inicio</a>
+        <a href="/mapa" class="hover:text-emerald-300">Mapa</a>
+        <a href="/relatos" class="hover:text-emerald-300">Relatos</a>
+        <a href="/catalogo" class="hover:text-emerald-300">Catálogo</a>
+        
+        <!-- Zona para Emprendedores (Oculta por defecto) -->
+        <a href="/emprendimiento" id="nav-emprendimiento" class="bg-amber-500 hover:bg-amber-600 text-stone-900 px-3 py-1 rounded font-bold hidden transition">
+          + Zona Emprendedor
+        </a>
+        
+        <a href="/perfil" class="hover:text-emerald-300">Mi Perfil</a>
+        
+        <!-- Botón de Cerrar Sesión -->
+        <button id="btn-logout" class="bg-red-600 hover:bg-red-700 text-white text-xs px-3 py-1.5 rounded transition">
+          Cerrar Sesión
+        </button>
       </nav>
     </div>
   </header>
@@ -79,6 +94,38 @@
     <p>&copy; Red Ancestral de Soacha (RAS).</p>
   </footer>
 
-  <script src="/js/emprendimiento.js"></script>
+  <script src="/js/emprendimiento.js">
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Obtener los datos del usuario en localStorage
+      const usuarioSesion = localStorage.getItem('usuarioRAS');
+
+      // 2. Si no ha iniciado sesión, redirigir al login
+      if (!usuarioSesion) {
+        window.location.href = '/login';
+        return;
+      }
+
+      const usuario = JSON.parse(usuarioSesion);
+
+      // 3. Mostrar la Zona de Emprendedores SOLO a usuarios con rol 'emprendedor'
+      const navEmprendimiento = document.getElementById('nav-emprendimiento');
+      if (navEmprendimiento) {
+        if (usuario && usuario.rol === 'emprendedor') {
+          navEmprendimiento.classList.remove('hidden');
+        } else {
+          navEmprendimiento.classList.add('hidden');
+        }
+      }
+
+      // 4. Lógica para Cerrar Sesión
+      const btnLogout = document.getElementById('btn-logout');
+      if (btnLogout) {
+        btnLogout.addEventListener('click', () => {
+          localStorage.removeItem('usuarioRAS');
+          window.location.href = '/login';
+        });
+      }
+    });
+  </script>
 </body>
 </html>

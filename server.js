@@ -33,8 +33,9 @@ pool.connect((err, client, release) => {
 // ==========================================
 // RUTAS DE VISTAS HTML
 // ==========================================
-// Redirección inicial a /inicio (index.html gestionará la verificación de sesión en cliente)
+// Redirección inicial
 app.get('/', (req, res) => res.redirect('/inicio'));
+
 app.get('/login', (req, res) => res.sendFile(path.join(__dirname, 'views', 'login.html')));
 app.get('/inicio', (req, res) => res.sendFile(path.join(__dirname, 'views', 'index.html')));
 app.get('/mapa', (req, res) => res.sendFile(path.join(__dirname, 'views', 'mapa.html')));
