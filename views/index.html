@@ -9,23 +9,29 @@
 </head>
 <body class="bg-stone-50 text-stone-800 font-sans flex flex-col min-h-screen">
 
+  <!-- Header / Menú de Navegación -->
   <header class="bg-emerald-900 text-white shadow-lg sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
       <div class="flex items-center space-x-3">
         <a href="/" class="bg-emerald-600 font-bold px-3 py-1 rounded text-xl hover:bg-emerald-500 transition">RAS</a>
         <h1 class="text-lg font-semibold tracking-wide hidden md:block">Red Ancestral de Soacha</h1>
       </div>
-      <nav class="space-x-4 text-sm font-medium">
+      <nav class="flex items-center space-x-4 text-sm font-medium">
         <a href="/" class="text-emerald-300 font-bold border-b-2 border-emerald-300 pb-1">Inicio</a>
         <a href="/mapa" class="hover:text-emerald-300 transition">Mapa</a>
         <a href="/relatos" class="hover:text-emerald-300 transition">Memoria</a>
         <a href="/catalogo" class="hover:text-emerald-300 transition">Catálogo</a>
         <a href="/emprendimiento" class="bg-amber-500 hover:bg-amber-600 text-stone-900 font-bold px-3 py-1 rounded transition">+ Zona Emprendedor</a>
+        <!-- Enlace para acceder al Login / Perfil -->
+        <a href="/login" class="bg-emerald-700 hover:bg-emerald-600 border border-emerald-500 text-white font-bold px-3 py-1 rounded transition">
+          Ingresar
+        </a>
       </nav>
     </div>
   </header>
 
   <main class="flex-grow">
+    <!-- Hero Section -->
     <section class="bg-emerald-800 text-white py-16 px-4 text-center">
       <div class="max-w-4xl mx-auto">
         <h2 class="text-3xl md:text-5xl font-bold mb-4">Preservando el patrimonio e identidad de Soacha</h2>
@@ -43,6 +49,7 @@
       </div>
     </section>
 
+    <!-- Módulos de la Plataforma -->
     <section class="max-w-7xl mx-auto py-12 px-4">
       <h3 class="text-2xl font-bold text-emerald-900 mb-8 border-b-2 border-emerald-600 pb-2 text-center">
         Módulos de la Plataforma
