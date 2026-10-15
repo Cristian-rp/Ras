@@ -9,7 +9,7 @@
 </head>
 <body class="bg-stone-50 text-stone-800 font-sans flex flex-col min-h-screen">
 
-  <!-- Header / Menú de Navegación -->
+  <!-- HEADER SIN EL BOTÓN DE ZONA EMPRENDEDOR -->
   <header class="bg-emerald-900 text-white shadow-lg sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
       <div class="flex items-center space-x-3">
@@ -22,13 +22,8 @@
         <a href="/mapa" class="hover:text-emerald-300">Mapa</a>
         <a href="/relatos" class="hover:text-emerald-300">Relatos</a>
         <a href="/catalogo" class="hover:text-emerald-300">Catálogo</a>
-        
-        <!-- Zona reservada EXCLUSIVAMENTE para Emprendedores (Oculta por defecto) -->
-        <a href="/emprendimiento" id="nav-emprendimiento" class="hover:text-emerald-300 hidden font-bold text-amber-400">Zona Emprendedores</a>
-        
         <a href="/perfil" class="hover:text-emerald-300">Mi Perfil</a>
         
-        <!-- Botón dinámico de Cerrar Sesión -->
         <button id="btn-logout" class="bg-red-600 hover:bg-red-700 text-white text-xs px-3 py-1.5 rounded transition">
           Cerrar Sesión
         </button>
@@ -99,10 +94,9 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // 1. Obtener los datos del usuario logueado
+      // 1. Verificar sesión activa
       const usuarioSesion = localStorage.getItem('usuarioRAS');
 
-      // 2. Si no hay sesión iniciada, redirigir al login
       if (!usuarioSesion) {
         window.location.href = '/login';
         return;
@@ -110,20 +104,23 @@
 
       const usuario = JSON.parse(usuarioSesion);
 
-      // 3. Control de acceso/visibilidad para la Zona de Emprendedores
+      // 2. Control del botón/enlace 'Zona Emprendedores' en el menú
       const navEmprendimiento = document.getElementById('nav-emprendimiento');
-      if (usuario && usuario.rol === 'emprendedor') {
-        navEmprendimiento.classList.remove('hidden');
-      } else {
-        navEmprendimiento.classList.add('hidden');
+      if (navEmprendimiento) {
+        // Se asegura de que permanezca oculto para emprendedores ya que publican desde "Mi Perfil"
+        if (usuario && usuario.rol === 'emprendedor') {
+          navEmprendimiento.classList.add('hidden');
+        } else {
+          navEmprendimiento.classList.add('hidden');
+        }
       }
 
-      // 4. Funcionalidad del botón Cerrar Sesión
+      // 3. Botón de Cerrar Sesión
       const btnLogout = document.getElementById('btn-logout');
       if (btnLogout) {
         btnLogout.addEventListener('click', () => {
-          localStorage.removeItem('usuarioRAS'); // Eliminar datos de sesión
-          window.location.href = '/login'; // Redirigir al Login
+          localStorage.removeItem('usuarioRAS');
+          window.location.href = '/login';
         });
       }
     });

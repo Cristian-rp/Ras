@@ -11,30 +11,21 @@
 </head>
 <body class="bg-stone-50 text-stone-800 font-sans flex flex-col min-h-screen">
 
-  <!-- HEADER UNIFICADO RAS -->
+  <!-- HEADER SIN EL BOTÓN DE ZONA EMPRENDEDOR -->
   <header class="bg-emerald-900 text-white shadow-lg sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-      <!-- Logo e Identidad -->
       <div class="flex items-center space-x-3">
         <a href="/inicio" class="bg-emerald-600 font-bold px-3 py-1 rounded text-xl text-white">RAS</a>
         <h1 class="text-lg font-semibold tracking-wide hidden md:block">Red Ancestral de Soacha</h1>
       </div>
       
-      <!-- Menú de Navegación Estandarizado -->
       <nav class="flex items-center space-x-4 text-sm font-medium">
         <a href="/inicio" class="hover:text-emerald-300">Inicio</a>
         <a href="/mapa" class="hover:text-emerald-300">Mapa</a>
         <a href="/relatos" class="hover:text-emerald-300">Relatos</a>
         <a href="/catalogo" class="hover:text-emerald-300">Catálogo</a>
-        
-        <!-- Zona para Emprendedores (Oculta por defecto) -->
-        <a href="/emprendimiento" id="nav-emprendimiento" class="bg-amber-500 hover:bg-amber-600 text-stone-900 px-3 py-1 rounded font-bold hidden transition">
-          + Zona Emprendedor
-        </a>
-        
         <a href="/perfil" class="hover:text-emerald-300">Mi Perfil</a>
         
-        <!-- Botón de Cerrar Sesión -->
         <button id="btn-logout" class="bg-red-600 hover:bg-red-700 text-white text-xs px-3 py-1.5 rounded transition">
           Cerrar Sesión
         </button>
